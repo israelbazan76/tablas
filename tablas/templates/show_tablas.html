@@ -1,0 +1,68 @@
+{% extends "base_template_bootstrap.html" %}
+
+
+{% block title %}Tablas de multiplicar{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <h2>Tablas de multiplicar</h2>
+    {% for field, errors in form.errors.items() %}
+    {{ ', '.join(errors) }}
+    {% endfor %}
+    <form class="form-inline" method="POST" action="">
+        {{ form.csrf_token() }}
+        <div class="form-group">
+            {{ form.number.label }}
+            {{ form.number(class="form-control mr-sm-2 mb-2 mb-sm-0") }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary mt-2 mt-sm-0")}}
+        </div>
+    </form>
+    <div class="list-group">
+        {% if num > 1 %}
+          {% if num > cols %}
+            <a href="{{ url_for('show_tablas',num=num - cols,start=start) }}"
+             class="list-group-item list-group-item-action list-group-item-primary">
+             atras
+            </a>
+          {% endif %}
+          {% if num <= cols %}
+            <a href="{{ url_for('show_tablas',num= 1,start=start) }}"
+            class="list-group-item list-group-item-action list-group-item-primary">
+            atras
+            </a>
+          {% endif %}
+        {% endif %}
+        <a href="{{ url_for('show_tablas',num=num+cols,start=start) }}"
+            class="list-group-item list-group-item-action list-group-item-success">
+            adelante
+        </a>
+    </div>
+    <div class="container mt-{{cols}}">
+        {% for n in range(0,cols) -%}
+          {% if n == 0 %}
+            <div class="d-inline-block bg-warning">
+            {% else%}
+            <div class="d-inline-block bg-secondary">
+            {% endif %}
+            {% for i in range(start,start + 10) -%}
+            <p><b>{{num+n}}</b> * {{i}} = {{(num+n)*i}}</p>
+            {% endfor -%}
+        </div>
+        {% endfor -%}
+    </div>
+    <div class="list-group">
+        {% if start > 10 %}
+        <a href="{{ url_for('show_tablas',num=num,start=start-10) }}"
+            class="list-group-item list-group-item-action list-group-item-primary">
+            retroceder
+        </a>
+        {% endif %}
+        <a href="{{ url_for('show_tablas',num=num,start=start+10) }}"
+            class="list-group-item list-group-item-action list-group-item-success">
+            avanzar
+        </a>
+    </div>
+
+</div>
+{% endblock %}
